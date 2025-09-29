@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    username: postgres
+    url: jdbc:postgresql://localhost:5432/encurtalink
+    password: 1234
+  jpa:
+    hibernate:
+      ddl-auto: update
+      show-sql: true
+
+info: ============== develop ==============
+
