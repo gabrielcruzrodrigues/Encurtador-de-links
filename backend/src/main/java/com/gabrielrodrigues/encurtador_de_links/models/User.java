@@ -19,14 +19,14 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 50, unique = true)
     private String username;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 50, unique = true)
     @Email
     private String email;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false)
     @NotBlank
     @JsonIgnore
     private String password;
@@ -36,7 +36,7 @@ public class User implements UserDetails {
 
     protected User() {}
 
-    public User(Long id, String username, String email, String password, RoleEnum role) {
+    public User(String username, String email, String password, RoleEnum role) {
         this.username = username;
         this.email = email;
         this.password = password;
@@ -70,7 +70,7 @@ public class User implements UserDetails {
 
     @Override
     public String getPassword() {
-        return "";
+        return this.password;
     }
 
     public void setPassword(String password) {
@@ -79,7 +79,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return "";
+        return this.username;
     }
 
     public void setUsername(String username) {
