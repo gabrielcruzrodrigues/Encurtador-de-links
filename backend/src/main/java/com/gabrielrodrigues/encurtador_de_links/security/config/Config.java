@@ -43,14 +43,14 @@ public class Config {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorization -> authorization
-//                        .requestMatchers(HttpMethod.POST, "/login").permitAll()
-//                        .requestMatchers(HttpMethod.POST, "/register").permitAll()
-                        .anyRequest().permitAll())
-//                .oauth2ResourceServer((config) -> config.jwt(
-//                        jwt -> jwt.decoder(jwtDecoder())))
-//                .sessionManagement((session) -> session
-//                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                        .maximumSessions(1))
+                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                        .anyRequest().authenticated())
+                .oauth2ResourceServer((config) -> config.jwt(
+                        jwt -> jwt.decoder(jwtDecoder())))
+                .sessionManagement((session) -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                        .maximumSessions(1))
                 .build();
     }
 
