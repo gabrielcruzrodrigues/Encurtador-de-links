@@ -1,8 +1,9 @@
 package com.gabrielrodrigues.encurtador_de_links.services;
 
-import com.gabrielrodrigues.encurtador_de_links.dtos.ResponseCreatedLinkDto;
+import com.gabrielrodrigues.encurtador_de_links.dtos.ResponseShortenLinkDto;
 import com.gabrielrodrigues.encurtador_de_links.models.User;
 import com.gabrielrodrigues.encurtador_de_links.repositories.LinkRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,8 +16,8 @@ public class LinkService {
         this.userService = userService;
     }
 
-    public ResponseCreatedLinkDto createShortLink(String url, Long userId) {
-        User user = this.userService.getById(userId);
+    public ResponseShortenLinkDto createShortLink(String url, HttpServletRequest request, Long userId) {
+//        User user = this.userService.getById(userId);
         return null;
     }
 

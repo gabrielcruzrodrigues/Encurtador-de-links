@@ -43,9 +43,7 @@ public class Config {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorization -> authorization
-                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/link").permitAll()
+                        .requestMatchers("/link/shorten").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer((config) -> config.jwt(
