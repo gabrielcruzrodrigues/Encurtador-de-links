@@ -1,9 +1,8 @@
 package com.gabrielrodrigues.encurtador_de_links.controllers;
 
-import com.gabrielrodrigues.encurtador_de_links.dtos.ErrorResponse;
 import com.gabrielrodrigues.encurtador_de_links.dtos.ResponseShortenLinkDto;
+import com.gabrielrodrigues.encurtador_de_links.dtos.ShortenRequestDto;
 import com.gabrielrodrigues.encurtador_de_links.exceptions.customExceptions.TokenNotFoundException;
-import com.gabrielrodrigues.encurtador_de_links.models.Link;
 import com.gabrielrodrigues.encurtador_de_links.services.LinkService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -22,8 +21,13 @@ public class LinkController {
         this.linkService = linkService;
     }
 
+    @GetMapping("/test")
+    public String test() {
+        return "pong";
+    }
+
     @PostMapping("/shorten")
-    public ResponseEntity<ResponseShortenLinkDto> shortenLink(@RequestBody String url, HttpServletRequest request) {
+    public ResponseEntity<ResponseShortenLinkDto> shortenLink(@RequestBody ShortenRequestDto shortenRequest, HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication.getPrincipal() instanceof Jwt jwt))
             throw new TokenNotFoundException("O token jwt não foi encontrado na requisição!");
@@ -32,7 +36,7 @@ public class LinkController {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(this.linkService.createShortLink(url, request, userId));
+                .body(this.linkService.createShortUrl(shortenRequest.url(), request, userId));
 
     }
 }

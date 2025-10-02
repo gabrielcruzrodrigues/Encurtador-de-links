@@ -9,12 +9,12 @@ public class Link {
     private Long id;
 
     @Column(length = 100, nullable = false, unique = true)
-    private String short_url;
+    private String shortUrl;
 
-    @Column(nullable = false, unique = true)
-    private String original_url;
+    @Column(nullable = false)
+    private String originalUrl;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private int clicks;
 
     @ManyToOne
@@ -23,9 +23,9 @@ public class Link {
 
     protected Link() {}
 
-    public Link(String short_url, String original_url, int clicks, User user) {
-        this.short_url = short_url;
-        this.original_url = original_url;
+    public Link(String shortUrl, String originalUrl, User user) {
+        this.shortUrl = shortUrl;
+        this.originalUrl = originalUrl;
         this.clicks = 0;
         this.user = user;
     }
@@ -38,20 +38,20 @@ public class Link {
         this.id = id;
     }
 
-    public String getShort_url() {
-        return this.short_url;
+    public String getShortUrl() {
+        return this.shortUrl;
     }
 
-    public void setShort_url(String short_url) {
-        this.short_url = short_url;
+    public void setShortUrl(String shortUrl) {
+        this.shortUrl = shortUrl;
     }
 
-    public String getOriginal_url() {
-        return this.original_url;
+    public String getOriginalUrl() {
+        return this.originalUrl;
     }
 
-    public void setOriginal_url(String original_url) {
-        this.original_url = original_url;
+    public void setOriginalUrl(String originalUrl) {
+        this.originalUrl = originalUrl;
     }
 
     public int getClicks() {

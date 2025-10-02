@@ -8,6 +8,7 @@ import com.gabrielrodrigues.encurtador_de_links.repositories.UserRepository;
 import com.gabrielrodrigues.encurtador_de_links.security.dtos.AuthenticatedResponseDto;
 import com.gabrielrodrigues.encurtador_de_links.security.dtos.LoginDto;
 import com.gabrielrodrigues.encurtador_de_links.security.dtos.RegisterDto;
+import jakarta.transaction.Transactional;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -40,6 +41,7 @@ public class AuthenticationService {
         }
     }
 
+    @Transactional
     public AuthenticatedResponseDto register(RegisterDto registerCredentials) throws Exception {
         boolean usernameVerify = this.userRepository.findByUsername(registerCredentials.username()).isPresent();
         if (usernameVerify)
