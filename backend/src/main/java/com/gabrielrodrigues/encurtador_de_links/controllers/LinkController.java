@@ -2,15 +2,19 @@ package com.gabrielrodrigues.encurtador_de_links.controllers;
 
 import com.gabrielrodrigues.encurtador_de_links.dtos.ResponseShortenLinkDto;
 import com.gabrielrodrigues.encurtador_de_links.dtos.ShortenRequestDto;
+import com.gabrielrodrigues.encurtador_de_links.exceptions.customExceptions.PathVariableNullableException;
 import com.gabrielrodrigues.encurtador_de_links.exceptions.customExceptions.TokenNotFoundException;
 import com.gabrielrodrigues.encurtador_de_links.services.LinkService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/link")
@@ -38,5 +42,14 @@ public class LinkController {
                 .status(HttpStatus.CREATED)
                 .body(this.linkService.createShortUrl(shortenRequest.url(), request, userId));
 
+    }
+
+    @GetMapping("/{shortUrl}")
+    public void redirect(@PathVariable String shortUrl, HttpServletResponse response) throws IOException {
+        if (shortUrl.isEmpty())
+            throw new PathVariableNullableException("A váriável da url é nula");
+
+        String originalUlr = this.linkService.findOriginalUrlByShortUrl(shortUrl);
+        response.sendRedirect(originalUlr);
     }
 }

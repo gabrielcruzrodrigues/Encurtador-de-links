@@ -1,6 +1,7 @@
 package com.gabrielrodrigues.encurtador_de_links.services;
 
 import com.gabrielrodrigues.encurtador_de_links.dtos.ResponseShortenLinkDto;
+import com.gabrielrodrigues.encurtador_de_links.exceptions.customExceptions.EntityNotFoundException;
 import com.gabrielrodrigues.encurtador_de_links.models.Link;
 import com.gabrielrodrigues.encurtador_de_links.models.User;
 import com.gabrielrodrigues.encurtador_de_links.repositories.LinkRepository;
@@ -58,5 +59,13 @@ public class LinkService {
         } while (linkVerify);
 
         return randomShortUrl;
+    }
+
+    public String findOriginalUrlByShortUrl(String shortUrl) {
+        String fullShortUrl = "http://short.local/" + shortUrl;
+        Link link = this.linkRepository.findByShortUrl(fullShortUrl).orElseThrow(
+                () -> new EntityNotFoundException("A shortUrl: " + shortUrl + " não foi encontrada!"));
+
+        return link.getOriginalUrl();
     }
 }

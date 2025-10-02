@@ -2,6 +2,7 @@ package com.gabrielrodrigues.encurtador_de_links.exceptions;
 
 import com.gabrielrodrigues.encurtador_de_links.exceptions.customExceptions.EntityAlreadyExist;
 import com.gabrielrodrigues.encurtador_de_links.exceptions.customExceptions.EntityNotFoundException;
+import com.gabrielrodrigues.encurtador_de_links.exceptions.customExceptions.PathVariableNullableException;
 import com.gabrielrodrigues.encurtador_de_links.exceptions.customExceptions.TokenNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,5 +57,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 request.getDescription(false)
         );
         return new ResponseEntity<ExceptionResponse>(response, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(PathVariableNullableException.class)
+    public final ResponseEntity<ExceptionResponse> pathVariableNullableException(Exception ex, WebRequest request) {
+        ExceptionResponse response = new ExceptionResponse(
+                LocalDateTime.now(),
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<ExceptionResponse>(response, HttpStatus.BAD_REQUEST);
     }
 }
