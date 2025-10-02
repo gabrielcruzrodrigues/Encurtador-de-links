@@ -34,6 +34,10 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private RoleEnum role;
 
+    @Column
+    @OneToMany(mappedBy = "user")
+    private List<Link> links;
+
     protected User() {}
 
     public User(String username, String email, String password, RoleEnum role) {
@@ -41,6 +45,7 @@ public class User implements UserDetails {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.links = null;
     }
 
     public Long getId() {

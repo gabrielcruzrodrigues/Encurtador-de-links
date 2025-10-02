@@ -45,7 +45,9 @@ public class Config {
                 .authorizeHttpRequests(authorization -> authorization
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-                        .anyRequest().authenticated())
+                        .requestMatchers(HttpMethod.GET, "/link").permitAll()
+//                        .requestMatchers(HttpMethod.GET, "/auth/info").permitAll()
+                        .requestMatchers("/auth/**").permitAll()                        .anyRequest().authenticated())
                 .oauth2ResourceServer((config) -> config.jwt(
                         jwt -> jwt.decoder(jwtDecoder())))
                 .sessionManagement((session) -> session

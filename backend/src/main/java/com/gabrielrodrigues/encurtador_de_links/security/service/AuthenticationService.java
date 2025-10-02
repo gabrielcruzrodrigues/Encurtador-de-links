@@ -1,6 +1,8 @@
 package com.gabrielrodrigues.encurtador_de_links.security.service;
 
 import com.gabrielrodrigues.encurtador_de_links.enums.RoleEnum;
+import com.gabrielrodrigues.encurtador_de_links.exceptions.customExceptions.EntityAlreadyExist;
+import com.gabrielrodrigues.encurtador_de_links.exceptions.customExceptions.EntityNotFoundException;
 import com.gabrielrodrigues.encurtador_de_links.models.User;
 import com.gabrielrodrigues.encurtador_de_links.repositories.UserRepository;
 import com.gabrielrodrigues.encurtador_de_links.security.dtos.AuthenticatedResponseDto;
@@ -12,7 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-//Tratar exceções
 @Service
 public class AuthenticationService {
     private final JwtTokenService jwtTokenService;
@@ -42,11 +43,11 @@ public class AuthenticationService {
     public AuthenticatedResponseDto register(RegisterDto registerCredentials) throws Exception {
         boolean usernameVerify = this.userRepository.findByUsername(registerCredentials.username()).isPresent();
         if (usernameVerify)
-            throw new Exception("O username já foi cadastrado no banco de dados!");
+            throw new EntityAlreadyExist("O username: " + registerCredentials.username() + " já foi cadastrado no banco de dados!");
 
         boolean emailVerify = this.userRepository.findByEmail(registerCredentials.email()).isPresent();
         if (emailVerify)
-            throw new Exception("Esse email já foi cadastrado no banco de dados!");
+            throw new EntityAlreadyExist("O email: " + registerCredentials.email() + " já foi cadastrado no banco de dados!");
 
         User user = new User(
                 registerCredentials.username(),
@@ -68,7 +69,8 @@ public class AuthenticationService {
                 new UsernamePasswordAuthenticationToken(loginCredentials.email(), loginCredentials.password()));
 
         String token = jwtTokenService.generateToken(auth);
-        User user = userRepository.findByEmail(loginCredentials.email()).orElseThrow();
+        User user = userRepository.findByEmail(loginCredentials.email()).orElseThrow(
+                () -> new EntityNotFoundException("O usuário com o email: " + loginCredentials.email() + " não foi encontrado!"));
 
         return new AuthenticatedResponseDto(
                 user.getId(),
