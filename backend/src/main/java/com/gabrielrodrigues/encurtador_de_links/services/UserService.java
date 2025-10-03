@@ -5,6 +5,7 @@ import com.gabrielrodrigues.encurtador_de_links.models.User;
 import com.gabrielrodrigues.encurtador_de_links.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -19,5 +20,9 @@ public class UserService {
     public User getById(Long id) {
         return this.userRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("O usuário com o ID " + id + " não foi encontrado!"));
+    }
+
+    public List<User> getAll() {
+        return this.userRepository.findAll();
     }
 }

@@ -1,9 +1,6 @@
 package com.gabrielrodrigues.encurtador_de_links.exceptions;
 
-import com.gabrielrodrigues.encurtador_de_links.exceptions.customExceptions.EntityAlreadyExist;
-import com.gabrielrodrigues.encurtador_de_links.exceptions.customExceptions.EntityNotFoundException;
-import com.gabrielrodrigues.encurtador_de_links.exceptions.customExceptions.PathVariableNullableException;
-import com.gabrielrodrigues.encurtador_de_links.exceptions.customExceptions.TokenNotFoundException;
+import com.gabrielrodrigues.encurtador_de_links.exceptions.customExceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -67,5 +64,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 request.getDescription(false)
         );
         return new ResponseEntity<ExceptionResponse>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ContentNotAvaliableToTheUserException.class)
+    public final ResponseEntity<ExceptionResponse> contentNotAvaliableToTheUserException(Exception ex, WebRequest request) {
+        ExceptionResponse response = new ExceptionResponse(
+                LocalDateTime.now(),
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<ExceptionResponse>(response, HttpStatus.FORBIDDEN);
     }
 }

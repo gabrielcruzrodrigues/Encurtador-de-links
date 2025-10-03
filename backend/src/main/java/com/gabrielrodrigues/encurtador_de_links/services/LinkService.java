@@ -8,8 +8,11 @@ import com.gabrielrodrigues.encurtador_de_links.repositories.LinkRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -66,6 +69,20 @@ public class LinkService {
         Link link = this.linkRepository.findByShortUrl(fullShortUrl).orElseThrow(
                 () -> new EntityNotFoundException("A shortUrl: " + shortUrl + " não foi encontrada!"));
 
+        this.addClickInLink(link);
         return link.getOriginalUrl();
+    }
+
+    private void addClickInLink(Link link) {
+        link.setClicks(link.getClicks() + 1);
+        this.linkRepository.save(link);
+    }
+
+    public Page<Link> getAll(Pageable pageable) {
+        return this.linkRepository.findAll(pageable);
+    }
+
+    public Page<Link> getAllByUserId(Long userId, Pageable pageable) {
+        return this.linkRepository.findByUserId(userId, pageable);
     }
 }
