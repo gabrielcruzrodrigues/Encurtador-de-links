@@ -1,0 +1,50 @@
+services:
+  postgres-db:
+    image: postgres:18
+    ports: 
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=encurtaLink
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1234
+    networks:
+      - web
+
+  traefik:
+    image: traefik:v3.1
+    container_name: traefik
+    command:
+      - "--api.insecure=true" # painel http://localhost:8080
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"     
+      - "8081:8080"
+    networks:
+      - web
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  spring-app:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres-db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db:5432/encurtaLink
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=1234
+    ports:
+      - "8080:8080"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.shortlink.rule=Host(`short.local`)"
+      - "traefik.http.services.shortlink.loadbalancer.server.port=8080"
+      - "traefik.http.middlewares.redirect.addprefix.prefix=/"
+    networks:
+      - web
+
+networks:
+  web:
+    driver: bridge
