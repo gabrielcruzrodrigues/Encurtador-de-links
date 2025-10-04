@@ -5,3 +5,5 @@ spring:
     servlet:
       path: /api
 
+  app:
+    redirectBasePath: "http://short.local/"

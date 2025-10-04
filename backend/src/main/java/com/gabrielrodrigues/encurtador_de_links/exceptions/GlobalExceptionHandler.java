@@ -66,13 +66,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<ExceptionResponse>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(ContentNotAvaliableToTheUserException.class)
-    public final ResponseEntity<ExceptionResponse> contentNotAvaliableToTheUserException(Exception ex, WebRequest request) {
+    @ExceptionHandler(DeleteFailedException.class)
+    public final ResponseEntity<ExceptionResponse> deleteFailedException(Exception ex, WebRequest request) {
         ExceptionResponse response = new ExceptionResponse(
                 LocalDateTime.now(),
                 ex.getMessage(),
                 request.getDescription(false)
         );
-        return new ResponseEntity<ExceptionResponse>(response, HttpStatus.FORBIDDEN);
+        return new ResponseEntity<ExceptionResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

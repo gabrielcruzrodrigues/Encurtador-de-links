@@ -1,5 +1,6 @@
 package com.gabrielrodrigues.encurtador_de_links.services;
 
+import com.gabrielrodrigues.encurtador_de_links.exceptions.customExceptions.DeleteFailedException;
 import com.gabrielrodrigues.encurtador_de_links.exceptions.customExceptions.EntityNotFoundException;
 import com.gabrielrodrigues.encurtador_de_links.models.User;
 import com.gabrielrodrigues.encurtador_de_links.repositories.UserRepository;
@@ -24,5 +25,15 @@ public class UserService {
 
     public List<User> getAll() {
         return this.userRepository.findAll();
+    }
+
+    public void delete(Long userId) {
+        User user = this.getById(userId);
+
+        try {
+            this.userRepository.delete(user);
+        } catch (Exception e) {
+            throw new DeleteFailedException("Aconteceu um erro ao tentar deletar o usuário com id: " + userId);
+        }
     }
 }
