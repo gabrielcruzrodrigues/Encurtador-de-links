@@ -1,6 +1,6 @@
 spring:
   datasource:
-    username: postgres
+    username: admin
     url: jdbc:postgresql://localhost:5432/encurtalink
     password: 1234
   jpa:

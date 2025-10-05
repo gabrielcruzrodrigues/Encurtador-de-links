@@ -37,8 +37,7 @@ public class LinkService {
     public ResponseShortShortenLinkDto createShortUrl(String originalUrl, HttpServletRequest request, Long userId) {
         User user = this.userService.getById(userId);
         String shortUrlPath = this.generateNewShortUrl();
-        String appUrl = request.getScheme() + this.redirectBasePath;
-        String fullShortUrl = appUrl + "/" + shortUrlPath;
+        String fullShortUrl = this.redirectBasePath + shortUrlPath;
 
         Link link = new Link(
                 fullShortUrl,
