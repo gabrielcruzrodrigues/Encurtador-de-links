@@ -44,7 +44,7 @@ grep short.local /etc/hosts
      ✅Saída esperada:
           127.0.0.1 short.local
 
-3. Forçar a atualização/limpeza do cache DNS rodando:
+3. (Ocasional) Forçar a atualização/limpeza do cache DNS rodando:
 ```
 sudo systemd-resolve --flush-caches
 
