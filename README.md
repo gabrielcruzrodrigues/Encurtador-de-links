@@ -1,5 +1,10 @@
 # Encurtador-de-links
 
+## Fluxo e arquitetura do sistema
+<p align="center">
+  <img src="./docs/flowAndDesign.png" alt="Fluxo e Design" width="350">
+</p>
+
 ## Fluxo do Traefik para o roteamento:
 ```
 Requisição: short.local/login
