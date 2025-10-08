@@ -44,8 +44,10 @@ public class Config {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorization -> authorization
 //                        .requestMatchers("/link/shorten").permitAll()
-                        .requestMatchers("/link/**").permitAll()
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/api/link/**").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("swagger-ui/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer((config) -> config.jwt(
                         jwt -> jwt.decoder(jwtDecoder())))

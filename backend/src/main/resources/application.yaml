@@ -1,9 +1,6 @@
 spring:
   application:
     name: encurtador-de-links
-  mvc:
-    servlet:
-      path: /api
 
   app:
     redirectBasePath: "http://short.local/"

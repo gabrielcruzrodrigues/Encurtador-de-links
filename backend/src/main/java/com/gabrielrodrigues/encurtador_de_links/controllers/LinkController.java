@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/link")
+@RequestMapping("/api/link")
 public class LinkController {
     private final LinkService linkService;
     private final UserService userService;
@@ -36,8 +36,8 @@ public class LinkController {
         this.userService = userService;
     }
 
-    @GetMapping("/test")
-    public String test() {
+    @GetMapping("/ping")
+    public String pong() {
         return "pong";
     }
 
