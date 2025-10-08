@@ -10,6 +10,7 @@ import com.gabrielrodrigues.encurtador_de_links.models.Link;
 import com.gabrielrodrigues.encurtador_de_links.models.User;
 import com.gabrielrodrigues.encurtador_de_links.services.LinkService;
 import com.gabrielrodrigues.encurtador_de_links.services.UserService;
+import jakarta.annotation.security.PermitAll;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Page;
@@ -92,7 +93,7 @@ public class LinkController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/{shortUrl}")
+    @GetMapping("/sh/{shortUrl}")
     public void redirectByShortUrl(@PathVariable String shortUrl, HttpServletResponse response) throws IOException {
         if (shortUrl.isEmpty())
             throw new PathVariableNullableException("A váriável da url é nula");

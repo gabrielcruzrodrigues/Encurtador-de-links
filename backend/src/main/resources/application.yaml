@@ -3,4 +3,4 @@ spring:
     name: encurtador-de-links
 
   app:
-    redirectBasePath: "http://short.local/"
+    redirectBasePath: "http://short.local/sh/"
