@@ -67,11 +67,12 @@ public class AuthenticationService {
     }
 
     private AuthenticatedResponseDto findAndAuthenticateUser(LoginDto loginCredentials) {
+        User user = userRepository.findByEmail(loginCredentials.email()).orElseThrow(
+                () -> new EntityNotFoundException("O usuário com o email: " + loginCredentials.email() + " não foi encontrado!"));
+
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginCredentials.email(), loginCredentials.password()));
 
-        User user = userRepository.findByEmail(loginCredentials.email()).orElseThrow(
-                () -> new EntityNotFoundException("O usuário com o email: " + loginCredentials.email() + " não foi encontrado!"));
         String token = jwtTokenService.generateToken(auth, user.getId());
 
         return new AuthenticatedResponseDto(

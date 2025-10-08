@@ -44,8 +44,10 @@ public class Config {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorization -> authorization
 //                        .requestMatchers("/link/shorten").permitAll()
-                        .requestMatchers("/api/link/**").permitAll()
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/link/{shortUrl}").permitAll()
+                        .requestMatchers("/api/link/short/{shortUrl}").permitAll()
+                        .requestMatchers("/api/auth/login").permitAll()
+                        .requestMatchers("/api/auth/register").permitAll()
                         .requestMatchers("swagger-ui/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated())
