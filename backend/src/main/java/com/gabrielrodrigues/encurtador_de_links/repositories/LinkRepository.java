@@ -13,4 +13,5 @@ public interface LinkRepository extends JpaRepository<Link, Long> {
     Optional<Link> findByShortUrl(String shortUrl);
     Optional<Link> findByOriginalUrl(String originalUrl);
     Page<Link> findByUserId(Long userId, Pageable pageable);
+
 }
