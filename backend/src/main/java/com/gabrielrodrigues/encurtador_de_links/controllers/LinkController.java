@@ -8,6 +8,8 @@ import com.gabrielrodrigues.encurtador_de_links.exceptions.customExceptions.Path
 import com.gabrielrodrigues.encurtador_de_links.exceptions.customExceptions.TokenNotFoundException;
 import com.gabrielrodrigues.encurtador_de_links.models.Link;
 import com.gabrielrodrigues.encurtador_de_links.models.User;
+import com.gabrielrodrigues.encurtador_de_links.security.accessInterfaces.AdminAccess;
+import com.gabrielrodrigues.encurtador_de_links.security.accessInterfaces.UserAccess;
 import com.gabrielrodrigues.encurtador_de_links.services.LinkService;
 import com.gabrielrodrigues.encurtador_de_links.services.UserService;
 import jakarta.annotation.security.PermitAll;
@@ -42,6 +44,7 @@ public class LinkController {
         return "pong";
     }
 
+    @UserAccess
     @PostMapping("/shorten")
     public ResponseEntity<ResponseShortShortenLinkDto> shortenLink(@RequestBody ShortenRequestDto shortenRequest, HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -55,7 +58,7 @@ public class LinkController {
                 .body(this.linkService.createShortUrl(shortenRequest.url(), request, userId));
     }
 
-//    @UserAccess
+    @AdminAccess
     @GetMapping("/links/{userId}")
     public ResponseEntity<List<ResponseFullShortenLinkDto>> GetLinksByUserId(@PathVariable Long userId, Pageable pageable) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -79,7 +82,7 @@ public class LinkController {
         return ResponseEntity.ok().body(response);
     }
 
-//    @AdminAccess
+    @AdminAccess
     @GetMapping("/links")
     public ResponseEntity<List<ResponseFullShortenLinkDto>> getAllLinks(Pageable pageable) {
         Page<Link> links = this.linkService.getAll(pageable);
@@ -102,8 +105,10 @@ public class LinkController {
         response.sendRedirect(originalUlr);
     }
 
+    @AdminAccess
     @GetMapping("/short/{shortUrl}")
     public ResponseEntity<ResponseFullShortenLinkDto> getByShortUrl(@PathVariable String shortUrl) {
+
         Link link = this.linkService.getByShortUrl(shortUrl);
         ResponseFullShortenLinkDto fullShortenLInkDto = new ResponseFullShortenLinkDto(
                 link.getShortUrl(),
@@ -113,6 +118,7 @@ public class LinkController {
         return ResponseEntity.ok().body(fullShortenLInkDto);
     }
 
+    @UserAccess
     @DeleteMapping("/{shortUrl}")
     public ResponseEntity<?> deleteByShortUrl(@PathVariable String shortUrl) {
         this.linkService.deleteByShortUrl(shortUrl);

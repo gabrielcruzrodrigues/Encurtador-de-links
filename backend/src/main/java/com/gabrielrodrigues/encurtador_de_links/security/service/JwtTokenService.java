@@ -1,5 +1,7 @@
 package com.gabrielrodrigues.encurtador_de_links.security.service;
 
+import com.gabrielrodrigues.encurtador_de_links.models.User;
+import com.gabrielrodrigues.encurtador_de_links.services.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -13,9 +15,11 @@ import java.util.stream.Collectors;
 @Service
 public class JwtTokenService {
     private final JwtEncoder jwtEncoder;
+    private final UserService userService;
 
-    public JwtTokenService(JwtEncoder jwtEncoder) {
+    public JwtTokenService(JwtEncoder jwtEncoder, UserService userService) {
         this.jwtEncoder = jwtEncoder;
+        this.userService = userService;
     }
 
     public String generateToken(Authentication authentication, Long userId) {
@@ -26,6 +30,8 @@ public class JwtTokenService {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(" "));
 
+        User user = this.userService.getById(userId);
+
         var claims = JwtClaimsSet.builder()
                 .issuer("encurta-link")
                 .issuedAt(now)
@@ -33,6 +39,7 @@ public class JwtTokenService {
                 .subject(authentication.getName())
                 .claim("scope", scopes)
                 .claim("id", userId)
+                .claim("role", user.getRole())
                 .build();
 
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();

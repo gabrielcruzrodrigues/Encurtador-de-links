@@ -3,6 +3,7 @@ package com.gabrielrodrigues.encurtador_de_links.exceptions;
 import com.gabrielrodrigues.encurtador_de_links.exceptions.customExceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -74,5 +75,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 request.getDescription(false)
         );
         return new ResponseEntity<ExceptionResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public final ResponseEntity<ExceptionResponse> authorizationDeniedException(Exception ex, WebRequest request) {
+        ExceptionResponse response = new ExceptionResponse(
+                LocalDateTime.now(),
+                "Você não tem permissão para acessar esse recurso!",
+                request.getDescription(false)
+        );
+        return new ResponseEntity<ExceptionResponse>(response, HttpStatus.FORBIDDEN);
     }
 }
