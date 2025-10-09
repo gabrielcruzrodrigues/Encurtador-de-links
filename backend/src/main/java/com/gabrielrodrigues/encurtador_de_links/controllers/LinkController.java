@@ -12,6 +12,8 @@ import com.gabrielrodrigues.encurtador_de_links.security.accessInterfaces.AdminA
 import com.gabrielrodrigues.encurtador_de_links.security.accessInterfaces.UserAccess;
 import com.gabrielrodrigues.encurtador_de_links.services.LinkService;
 import com.gabrielrodrigues.encurtador_de_links.services.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.security.PermitAll;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,6 +33,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/link")
+@Tag(name = "Links", description = "Gerenciamento de links encurtados | SEM O REDIRECIONAMENTO DO PROXY REVERSO")
 public class LinkController {
     private final LinkService linkService;
     private final UserService userService;
@@ -42,12 +45,14 @@ public class LinkController {
 
     @AdminAccess
     @GetMapping("/ping")
+    @Operation(summary = "Ping no serviço | roles permitidas: ADMIN")
     public String pong() {
         return "pong";
     }
 
     @AdminAccess
     @GetMapping("/links/{userId}")
+    @Operation(summary = "Buscar Link pelo ID do usuário | roles permitidas: ADMIN")
     public ResponseEntity<List<ResponseFullShortenLinkDto>> GetLinksByUserId(@PathVariable Long userId, Pageable pageable) {
         Page<Link> links = this.linkService.getAllByUserId(userId, pageable);
         List<ResponseFullShortenLinkDto> response = links.stream()
@@ -62,6 +67,7 @@ public class LinkController {
 
     @AdminAccess
     @GetMapping("/links")
+    @Operation(summary = "Listar todos os links | roles permitidas: ADMIN")
     public ResponseEntity<List<ResponseFullShortenLinkDto>> getAllLinks(Pageable pageable) {
         Page<Link> links = this.linkService.getAll(pageable);
         List<ResponseFullShortenLinkDto> response = links.stream()
@@ -75,6 +81,7 @@ public class LinkController {
     }
 
     @GetMapping("/sh/{shortUrl}")
+    @Operation(summary = "Redirecionar link curto para url original | roles permitidas: USER, ADMIN")
     public void redirectByShortUrl(@PathVariable String shortUrl, HttpServletResponse response) throws IOException {
         if (shortUrl.isEmpty())
             throw new PathVariableNullableException("A váriável da url é nula");
@@ -85,6 +92,7 @@ public class LinkController {
 
     @AdminAccess
     @GetMapping("/short/{shortUrl}")
+    @Operation(summary = "Buscar Link pelo codigo da url encurtada | roles permitidas: ADMIN")
     public ResponseEntity<ResponseFullShortenLinkDto> getByShortUrl(@PathVariable String shortUrl) {
         Link link = this.linkService.getByShortUrl(shortUrl);
         ResponseFullShortenLinkDto fullShortenLInkDto = new ResponseFullShortenLinkDto(
@@ -97,6 +105,7 @@ public class LinkController {
 
     @UserAccess
     @PostMapping("/shorten")
+    @Operation(summary = "Criar um link encurtado | roles permitidas: USER, ADMIN")
     public ResponseEntity<ResponseShortShortenLinkDto> shortenLink(@RequestBody ShortenRequestDto shortenRequest, HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication.getPrincipal() instanceof Jwt jwt))
@@ -111,6 +120,7 @@ public class LinkController {
 
     @UserAccess
     @DeleteMapping("/{shortUrl}")
+    @Operation(summary = "Deletar link encurtado | roles permitidas: USER, ADMIN")
     public ResponseEntity<?> deleteByShortUrl(@PathVariable String shortUrl) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication.getPrincipal() instanceof Jwt jwt))
