@@ -118,21 +118,14 @@ public class LinkController {
 
         String role = jwt.getClaim("role");
         if (!role.equals("ADMIN")) {
-            //Terminar validação
+            Link link = this.linkService.getByShortUrl(shortUrl);
+
+            if (!Objects.equals(link.getUser().getId(), jwt.getClaim("id"))) {
+                throw new ContentNotAvaliableToTheUserException("Esses dados não pertencem ao usuário logado!");
+            }
         }
 
         this.linkService.deleteByShortUrl(shortUrl);
         return ResponseEntity.noContent().build();
     }
-
-//    private void validateUserToken(Authentication authentication) {
-//        if (!(authentication.getPrincipal() instanceof Jwt jwt))
-//            throw new TokenNotFoundException("O token jwt não foi encontrado na requisição!");
-//
-//        Long userIdJwtToken = jwt.getClaim("id");
-//        User user = this.userService.getById(userIdJwtToken);
-//
-//        if (!Objects.equals(authentication.getName(), user.getUsername()))
-//            throw new ContentNotAvaliableToTheUserException("Esses dados não pertencem ao usuário logado!");
-//    }
 }
