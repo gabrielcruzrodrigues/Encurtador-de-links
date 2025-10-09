@@ -1,6 +1,7 @@
 package com.gabrielrodrigues.encurtador_de_links.security.service;
 
 import com.gabrielrodrigues.encurtador_de_links.enums.RoleEnum;
+import com.gabrielrodrigues.encurtador_de_links.exceptions.customExceptions.BadCredentialsException;
 import com.gabrielrodrigues.encurtador_de_links.exceptions.customExceptions.EntityAlreadyExist;
 import com.gabrielrodrigues.encurtador_de_links.exceptions.customExceptions.EntityNotFoundException;
 import com.gabrielrodrigues.encurtador_de_links.models.User;
@@ -37,7 +38,7 @@ public class AuthenticationService {
         try {
             return this.findAndAuthenticateUser(loginCredentials);
         } catch (Exception e) {
-            throw new Exception(e.getMessage());
+            throw new BadCredentialsException(e.getMessage());
         }
     }
 

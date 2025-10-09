@@ -5,6 +5,11 @@
   <img src="./docs/flowAndDesign.png" alt="Fluxo e Design" width="350">
 </p>
 
+## Acesso a documentação via Swagger:
+```
+http://localhost:8080/swagger-ui/index.html
+```
+
 ## Fluxo do Traefik para o roteamento:
 ```
 Requisição: short.local/login

@@ -86,4 +86,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         );
         return new ResponseEntity<ExceptionResponse>(response, HttpStatus.FORBIDDEN);
     }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public final ResponseEntity<ExceptionResponse> badCredentialsException(Exception ex, WebRequest request) {
+        ExceptionResponse response = new ExceptionResponse(
+                LocalDateTime.now(),
+                "As credenciais estão incorretas, tente novamente!",
+                request.getDescription(false)
+        );
+        return new ResponseEntity<ExceptionResponse>(response, HttpStatus.UNAUTHORIZED);
+    }
 }
