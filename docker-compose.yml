@@ -47,7 +47,7 @@ services:
       - "traefik.http.middlewares.shortlink-auth-prefix.addprefix.prefix=/api/auth"
 
       # Router do Swagger — aplica o middleware de remoção de prefixo
-      - "traefik.http.routers.shortlink-swagger.rule=Host(`short.local`) && (PathPrefix(`/swagger-api/api/auth/register`) || PathPrefix(`/swagger-api/api/auth/login`))"
+      - "traefik.http.routers.shortlink-swagger.rule=Host(`short.local`) && PathPrefix(`/swagger-api`)"
       - "traefik.http.routers.shortlink-swagger.entrypoints=web"
       - "traefik.http.routers.shortlink-swagger.service=shortlink-swagger-service"
       - "traefik.http.services.shortlink-swagger-service.loadbalancer.server.port=8080"
