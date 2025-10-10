@@ -46,14 +46,23 @@ public class Config {
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/api/auth/register").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/link/sh/*").permitAll()
-                        .requestMatchers("swagger-ui/**").permitAll()
+
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/swagger-ui.html").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
-                        .anyRequest().authenticated())
+                        .requestMatchers("/api/auth/swagger-ui/index.html").permitAll()
+
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        .anyRequest().authenticated()
+                )
                 .oauth2ResourceServer((config) -> config.jwt(
-                        jwt -> jwt.decoder(jwtDecoder())))
+                        jwt -> jwt.decoder(jwtDecoder()))
+                )
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                        .maximumSessions(1))
+                        .maximumSessions(1)
+                )
                 .build();
     }
 

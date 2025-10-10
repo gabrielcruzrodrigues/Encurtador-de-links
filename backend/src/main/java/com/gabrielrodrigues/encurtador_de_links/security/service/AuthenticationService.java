@@ -38,7 +38,7 @@ public class AuthenticationService {
         try {
             return this.findAndAuthenticateUser(loginCredentials);
         } catch (Exception e) {
-            throw new BadCredentialsException(e.getMessage());
+            throw new Exception(e.getMessage());
         }
     }
 
@@ -71,16 +71,20 @@ public class AuthenticationService {
         User user = userRepository.findByEmail(loginCredentials.email()).orElseThrow(
                 () -> new EntityNotFoundException("O usuário com o email: " + loginCredentials.email() + " não foi encontrado!"));
 
-        Authentication auth = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginCredentials.email(), loginCredentials.password()));
+        try {
+            Authentication auth = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginCredentials.email(), loginCredentials.password()));
 
-        String token = jwtTokenService.generateToken(auth, user.getId());
+            String token = jwtTokenService.generateToken(auth, user.getId());
 
-        return new AuthenticatedResponseDto(
-                user.getId(),
-                user.getUsername(),
-                token,
-                user.getRole().toString()
-        );
+            return new AuthenticatedResponseDto(
+                    user.getId(),
+                    user.getUsername(),
+                    token,
+                    user.getRole().toString()
+            );
+        } catch (Exception e) {
+            throw new BadCredentialsException(e.getMessage());
+        }
     }
 }

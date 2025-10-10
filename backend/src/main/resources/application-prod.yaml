@@ -8,4 +8,9 @@ spring:
       ddl-auto: update
       show-sql: true
 
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+
 info: ============== production ==============

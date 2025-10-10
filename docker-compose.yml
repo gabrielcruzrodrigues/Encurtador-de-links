@@ -40,16 +40,35 @@ services:
     labels:
       - "traefik.enable=true"
 
+      # Middleware: remove prefixo /api/link/swagger-api
+      - "traefik.http.middlewares.shortlink-auth-strip.stripprefix.prefixes=/swagger-api"
+
+      # Middleware: adiciona prefixo /api/auth
+      - "traefik.http.middlewares.shortlink-auth-prefix.addprefix.prefix=/api/auth"
+
+      # Router do Swagger — aplica o middleware de remoção de prefixo
+      - "traefik.http.routers.shortlink-swagger.rule=Host(`short.local`) && (PathPrefix(`/swagger-api/api/auth/register`) || PathPrefix(`/swagger-api/api/auth/login`))"
+      - "traefik.http.routers.shortlink-swagger.entrypoints=web"
+      - "traefik.http.routers.shortlink-swagger.service=shortlink-swagger-service"
+      - "traefik.http.services.shortlink-swagger-service.loadbalancer.server.port=8080"
+      - "traefik.http.routers.shortlink-swagger.middlewares=shortlink-auth-strip"
+
+      # Router para o Swagger UI puro
+      - "traefik.http.routers.shortlink-ui.rule=Host(`short.local`) && (PathPrefix(`/swagger-ui`) || PathPrefix(`/v3/api-docs`))"
+      - "traefik.http.routers.shortlink-ui.entrypoints=web"
+      - "traefik.http.routers.shortlink-ui.service=shortlink-ui-service"
+      - "traefik.http.services.shortlink-ui-service.loadbalancer.server.port=8080"
+      - "traefik.http.routers.shortlink-ui.priority=100"
+
       # Rota para authController (vai para /api/auth/login)
       - "traefik.http.routers.shortlink-auth.rule=Host(`short.local`) && (PathPrefix(`/login`) || PathPrefix(`/register`) || PathPrefix(`/logout`))"
       - "traefik.http.routers.shortlink-auth.entrypoints=web"
       - "traefik.http.routers.shortlink-auth.service=shortlink-auth-service"
       - "traefik.http.services.shortlink-auth-service.loadbalancer.server.port=8080"
-      - "traefik.http.middlewares.shortlink-auth-prefix.addprefix.prefix=/api/auth"
       - "traefik.http.routers.shortlink-auth.middlewares=shortlink-auth-prefix"
 
       # Todas as outras rotas vão para o LinkController (qualquer outro path → /api/link/{code})
-      - "traefik.http.routers.shortlink-link.rule=Host(`short.local`)"
+      - "traefik.http.routers.shortlink-link.rule=Host(`short.local`) && (PathPrefix(`/ping`) || PathPrefix(`/links`) || PathPrefix(`/sh`) || PathPrefix(`/short`) || PathPrefix(`/shorten`))"
       - "traefik.http.routers.shortlink-link.entrypoints=web"
       - "traefik.http.routers.shortlink-link.service=shortlink-link-service"
       - "traefik.http.services.shortlink-link-service.loadbalancer.server.port=8080"
