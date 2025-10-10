@@ -60,15 +60,15 @@ services:
       - "traefik.http.services.shortlink-ui-service.loadbalancer.server.port=8080"
       - "traefik.http.routers.shortlink-ui.priority=100"
 
-      # Rota para authController (vai para /api/auth/login)
+      # Route for authController
       - "traefik.http.routers.shortlink-auth.rule=Host(`short.local`) && (PathPrefix(`/login`) || PathPrefix(`/register`) || PathPrefix(`/logout`))"
       - "traefik.http.routers.shortlink-auth.entrypoints=web"
       - "traefik.http.routers.shortlink-auth.service=shortlink-auth-service"
       - "traefik.http.services.shortlink-auth-service.loadbalancer.server.port=8080"
       - "traefik.http.routers.shortlink-auth.middlewares=shortlink-auth-prefix"
 
-      # Todas as outras rotas vão para o LinkController (qualquer outro path → /api/link/{code})
-      - "traefik.http.routers.shortlink-link.rule=Host(`short.local`) && (PathPrefix(`/ping`) || PathPrefix(`/links`) || PathPrefix(`/sh`) || PathPrefix(`/short`) || PathPrefix(`/shorten`))"
+      # Route for LinkController (All unconfigured routes)
+      - "traefik.http.routers.shortlink-link.rule=Host(`short.local`)"
       - "traefik.http.routers.shortlink-link.entrypoints=web"
       - "traefik.http.routers.shortlink-link.service=shortlink-link-service"
       - "traefik.http.services.shortlink-link-service.loadbalancer.server.port=8080"
