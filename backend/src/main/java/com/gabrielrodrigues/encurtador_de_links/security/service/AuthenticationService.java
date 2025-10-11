@@ -35,11 +35,7 @@ public class AuthenticationService {
     }
 
     public AuthenticatedResponseDto login(LoginDto loginCredentials) throws Exception {
-        try {
-            return this.findAndAuthenticateUser(loginCredentials);
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
+        return this.findAndAuthenticateUser(loginCredentials);
     }
 
     @Transactional
