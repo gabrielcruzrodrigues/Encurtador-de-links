@@ -14,7 +14,7 @@ services:
     image: traefik:v3.1
     container_name: traefik
     command:
-      - "--api.insecure=true" # painel http://localhost:8080
+      - "--api.insecure=true" # panel http://localhost:8081
       - "--providers.docker=true"
       - "--entrypoints.web.address=:80"
     ports:
@@ -40,11 +40,14 @@ services:
     labels:
       - "traefik.enable=true"
 
-      # Middleware: remove prefixo /api/link/swagger-api
+      # Middleware: remove prefix /swagger-api
       - "traefik.http.middlewares.shortlink-auth-strip.stripprefix.prefixes=/swagger-api"
 
-      # Middleware: adiciona prefixo /api/auth
+      # Middleware: add prefix /api/auth
       - "traefik.http.middlewares.shortlink-auth-prefix.addprefix.prefix=/api/auth"
+
+      # Middleware: add prefix /api/link
+      - "traefik.http.middlewares.shortlink-link-prefix.addprefix.prefix=/api/link"
 
       # Router do Swagger — aplica o middleware de remoção de prefixo
       - "traefik.http.routers.shortlink-swagger.rule=Host(`short.local`) && PathPrefix(`/swagger-api`)"
@@ -72,7 +75,6 @@ services:
       - "traefik.http.routers.shortlink-link.entrypoints=web"
       - "traefik.http.routers.shortlink-link.service=shortlink-link-service"
       - "traefik.http.services.shortlink-link-service.loadbalancer.server.port=8080"
-      - "traefik.http.middlewares.shortlink-link-prefix.addprefix.prefix=/api/link"
       - "traefik.http.routers.shortlink-link.middlewares=shortlink-link-prefix"
     networks:
       - web
